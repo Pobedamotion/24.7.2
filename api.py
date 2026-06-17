@@ -80,3 +80,34 @@ class PetFriends:
         except:
             result = res.text
         return status, result
+
+    def add_new_pet_without_photo(self, auth_key: dict, name: str,
+                                  animal_type: str, age: str):
+        """Метод добавляет питомца без фото"""
+        headers = {'auth_key': auth_key['key']}
+        data = {
+            'name': name,
+            'animal_type': animal_type,
+            'age': age
+        }
+        res = requests.post(self.base_url + 'api/create_pet_simple',
+                            headers=headers, data=data)
+        status = res.status_code
+        try:
+            result = res.json()
+        except:
+            result = res.text
+        return status, result
+
+    def add_photo_of_pet(self, auth_key: dict, pet_id: str, pet_photo: str):
+        """Метод добавляет фото к питомцу"""
+        headers = {'auth_key': auth_key['key']}
+        file = {'pet_photo': (pet_photo, open(pet_photo, 'rb'), 'image/jpeg')}
+        res = requests.post(self.base_url + 'api/pets/set_photo/' + pet_id,
+                            headers=headers, files=file)
+        status = res.status_code
+        try:
+            result = res.json()
+        except:
+            result = res.text
+        return status, result
